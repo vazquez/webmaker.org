@@ -16,6 +16,7 @@
   </ul>
   </li>
   <li>
-  <button ng-cloak ng-show="!_user.email" class="btn btn-primary navbar-btn" ng-click="login()">{{'Sign in' | i18n }}</button>
+  <button ng-cloak ng-controller="createUserController" ng-show="!_user.email" class="btn btn-primary navbar-btn" ng-click="createUserTwo()">{{ 'Create an account' | i18n }}</button>
+  <button ng-cloak ng-controller="tokenLoginController" ng-show="!_user.email" class="btn btn-primary navbar-btn" ng-click="tokenLogin()">{{'Sign in' | i18n }}</button>
   </li>
 </ul>

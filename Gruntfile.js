@@ -96,7 +96,10 @@ module.exports = function (grunt) {
             'bower_components/jquery/jquery.js',
             'bower_components/web-literacy-client/dist/web-literacy-client.with-langs.js',
             'bower_components/makeapi-client/src/make-api.js',
-            'bower_components/webmaker-auth-client/dist/webmaker-auth-client.min.js',
+            'bower_components/eventEmitter/EventEmitter.js',
+            'bower_components/cookie-js/cookie.js',
+            'bower_components/webmaker-analytics/analytics.js',
+            'bower_components/webmaker-auth-client/webmaker-auth-client.js',
             'bower_components/selectize/dist/js/standalone/selectize.js',
             'bower_components/webmaker-analytics/analytics.js',
 

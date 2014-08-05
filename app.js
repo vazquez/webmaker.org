@@ -331,8 +331,12 @@ var middleware = require("./lib/middleware");
 app.post('/verify', webmakerAuth.handlers.verify);
 app.post('/authenticate', webmakerAuth.handlers.authenticate);
 app.post('/create', webmakerAuth.handlers.create);
+app.post('/create2', webmakerAuth.handlers.create2);
 app.post('/logout', webmakerAuth.handlers.logout);
 app.post('/check-username', webmakerAuth.handlers.exists);
+app.get('/check-email', webmakerAuth.handlers.emailExists);
+app.post('/request', webmakerAuth.handlers.request);
+app.post('/authenticateToken', webmakerAuth.handlers.authenticateToken);
 
 app.get("/healthcheck", routes.api.healthcheck);
 
