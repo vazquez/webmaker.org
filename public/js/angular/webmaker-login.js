@@ -1,7 +1,7 @@
 angular
   .module('webmakerAngular.login', [])
-  .factory('webmakerLoginService', ['$rootScope', '$modal', '$window', 'CONFIG',
-    function webmakerLoginService($rootScope, $modal, $window, CONFIG) {
+  .factory('webmakerLoginService', ['$rootScope', '$modal', '$window', '$location', 'CONFIG',
+    function webmakerLoginService($rootScope, $modal, $window, $location, CONFIG) {
 
       // This is needed to apply scope changes for events that happen in
       // async callbacks.
@@ -42,6 +42,14 @@ angular
       auth.on('error', function (message, xhr) {
         console.error('error', message, xhr);
       });
+
+      var searchObj = $location.search();
+
+      if ( searchObj.e && searchObj.t ) {
+        auth.authenticateToken();
+      }
+
+      auth.verify();
 
       return auth;
     }
@@ -224,9 +232,6 @@ angular
               $scope.form.user.username.$setValidity('taken', true);
             });
         };
-
       };
-
-      webmakerLoginService.verify();
     }
   ]);
