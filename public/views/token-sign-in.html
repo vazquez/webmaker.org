@@ -8,8 +8,12 @@
     <div ng-hide="enterToken">
       <div class="form-group">
         <label for="loginEmail">Email</label>
-        <input name="loginEmail" class="form-control" ng-model="user.loginEmail" autocomplete="on" required>
-        <span class="help-block" ng-show="form.loginEmail.$error.invalid">That doesn't look like an email address!</span>
+        <input name="loginEmail" class="form-control" ng-blur="checkEmail();" ng-model="user.loginEmail" autocomplete="on" required>
+        <span class="help-block" ng-show="form.user.loginEmail.$error.invalid">That doesn't look like an email address!</span>
+        <span class="help-block" ng-show="form.user.loginEmail.$error.accountExists">
+          No account found for your email!
+          <button type="button" class="create-user btn btn-primary" ng-click="cancel(); createUserTwo(user.loginEmail);">Sign Up!</button>
+        </span>
       </div>
       <div class="form-group hidden">
         <label for="password">Password</label>
@@ -18,7 +22,7 @@
       <p>
         By proceeding, you agree to Webmaker\'s <a href="#">Terms</a> & <a href="#">Privacy Policy</a>.
       </p>
-      <button class="submit-userid btn btn-primary" type="button" ng-click="user.loginEmail && submitEmail()">Login</button>
+      <button class="submit-userid btn btn-primary" type="button" ng-disabled="form.user.loginEmail.$error.accountExists" ng-click="user.loginEmail && submitEmail()">Login</button>
     </div>
     <div ng-show="enterToken">
       <div class="form-group key-group">

@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button ng-click="cancel()" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <button ng-click="cancel()" ng-hide="welcome" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
   <h3 class="modal-title" ng-hide="welcome && user.username">{{ 'webmakerAuthWelcome' | i18n }}</h3>
   <h3 class="modal-title" ng-show="welcome && user.username">Welcome {{ user.username }}</h3>
 </div>
@@ -8,9 +8,12 @@
     <div ng-show="enterEmail">
       <div class="form-group">
         <label for="email">{{ 'Email' | i18n }}</label>
-        <input ng-model="user.email" ng-blur="checkEmail()" name="email" autocomplete="off" required>
+        <input ng-model="user.email" ng-blur="checkEmail();" name="email" autocomplete="off" required>
         <span class="help-block" ng-show="form.user.email.$error.invalid">That doesn't look like an email address!</span>
-        <span class="help-block" ng-show="form.user.email.$error.accountExists">That email already has a Webmaker Account! log in with it here</span>
+        <span class="help-block" ng-show="form.user.email.$error.accountExists">
+          That email already has a Webmaker Account!
+          <button type="button" class="create-user btn btn-primary" ng-click="cancel(); tokenLogin(user.email);">Log In</button>
+        </span>
       </div>
       <div class="checkbox">
         <label>
@@ -43,5 +46,5 @@
   </form>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">{{ 'Cancel' | i18n }}</button>
+  <button type="button" class="btn btn-default" data-dismiss="modal" ng-hide="welcome" ng-click="cancel()">{{ 'Cancel' | i18n }}</button>
 </div>
