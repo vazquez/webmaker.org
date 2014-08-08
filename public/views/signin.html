@@ -1,0 +1,62 @@
+<div class="modal-header">
+  <button ng-click="cancel()" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+  <h3 class="modal-title" ng-hide="enterToken">Login</h3>
+  <span ng-show="enterToken"><i class="fa fa-envelope" style="color:#aaa;"> </i> We emailed you a key</span>
+</div>
+<div class="modal-body">
+  <form class="form" name="form.user" novalidate>
+    <div ng-show="enterEmail">
+      <div class="form-group">
+        <label for="loginEmail">Email</label>
+        <input name="loginEmail" class="form-control" ng-blur="checkEmail();" ng-model="user.loginEmail" autocomplete="on" required>
+        <span class="help-block" ng-show="form.user.loginEmail.$error.invalid">That doesn't look like an email address!</span>
+        <span class="help-block" ng-show="form.user.loginEmail.$error.noAccount">
+          No account found for your email!
+          <button type="button" class="create-user btn btn-primary" ng-click="cancel(); createUserTwo(user.loginEmail);">Sign Up!</button>
+        </span>
+      </div>
+      <div class="form-group" ng-show="usePasswordLogin">
+        <label for="password">Password</label>
+        <input ng-model="user.password" type="password" name="password" required="">
+      </div>
+      <p>
+        By proceeding, you agree to Webmaker\'s <a href="#">Terms</a> & <a href="#">Privacy Policy</a>.
+      </p>
+      <button class="submit-userid btn btn-primary" type="button" ng-disabled="form.user.loginEmail.$error.noAccount" ng-click="submit()">Login</button>
+    </div>
+    <div ng-show="enterToken">
+      <div class="form-group key-group">
+        <label for="key">Enter your key to login</label>
+        <input ng-model="user.token" name="key" class="form-control" required="">
+      </div>
+      <button class="submit-userid btn btn-primary" type="button" ng-click="user.token && submitToken()">Submit Key</button>
+    </div>
+    <div ng-show="setFirstPassword">
+      <div class="form-group key-group">
+        <label for="key">Enter the Login key we just sent you</label>
+        <input ng-model="user.token" name="key" class="form-control" required="">
+      </div>
+      <div class="form-group password-group">
+        <label for="key">Enter a new password</label>
+        <input ng-model="user.password" type="password" required="">
+      </div>
+      <div class="form-group confirm-group">
+        <label for="key">Confirm the new password</label>
+        <input ng-model="user.confirmPassword" type="password" required="">
+      </div>
+      <button class="submit-userid btn btn-primary" type="button" ng-click="user.token && user.password && user.confirmPassword && user.password === user.confirmPassword && submitFirstPassword()">Set New Password</button>
+    </div>
+    <div ng-show="setFirstPasswordSuccess">
+      <div class="form-group">
+        <p>Password Set Successfully! You will be required to provide it to log in from now on.</p>
+      </div>
+      <button ng-click="continue()" class="create-user btn btn-primary" type="button">Continue</button>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <p ng-show="enterToken">
+    Trouble with the key? <a href="#">Get help.</a> Frustrated with these keys? <button class="submit-userid btn btn-primary" type="button" ng-click="setPassword()">Set a password</button>
+  </p>
+  <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">{{ 'Cancel' | i18n }}</button>
+</div>

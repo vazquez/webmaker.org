@@ -34,6 +34,16 @@ angular
         apply();
       });
 
+      auth.on('passwordlogin', function (user) {
+        $rootScope._user = user;
+        apply();
+      });
+
+      auth.on('firstpasswordset', function(user) {
+        console.log( arguments );
+        $rootScope._user = user;
+      });
+
       auth.on('logout', function (why) {
         $rootScope._user = {};
         apply();
@@ -54,11 +64,11 @@ angular
       return auth;
     }
   ])
-  .controller('tokenLoginController', ['$rootScope', '$scope', '$http', '$modal', 'webmakerLoginService',
+  .controller('loginController', ['$rootScope', '$scope', '$http', '$modal', 'webmakerLoginService',
     function ($rootScope, $scope, $http, $modal, webmakerLoginService) {
       $rootScope.tokenLogin = function (email) {
         $modal.open({
-          templateUrl: '/views/token-sign-in.html',
+          templateUrl: '/views/signin.html',
           controller: tokenLogin,
           resolve: {
             email: function() {
@@ -71,6 +81,7 @@ angular
       var tokenLogin = function ($scope, $modalInstance, email) {
         $scope.form = {};
         $scope.user = {};
+        $scope.enterEmail = true;
 
         if ( email ) {
           $scope.user.loginEmail = email;
@@ -86,7 +97,7 @@ angular
           var isValid = emailRegex.test($scope.user.loginEmail);
 
           $scope.form.user.loginEmail.$setValidity('invalid', isValid);
-          $scope.form.user.loginEmail.$setValidity('accountExists', true);
+          $scope.form.user.loginEmail.$setValidity('noAccount', true);
 
           if (!isValid) {
             return;
@@ -94,22 +105,51 @@ angular
 
           $http
             .get(webmakerLoginService.urls.checkEmail + $scope.user.loginEmail)
-            .success(function (email) {
-              $scope.form.user.loginEmail.$setValidity('accountExists', email.exists);
+            .success(function (resp) {
+              $scope.usePasswordLogin = resp.usePasswordLogin;
+              $scope.form.user.loginEmail.$setValidity('noAccount', resp.exists);
             })
             .error(function (err) {
-              $scope.form.user.loginEmail.$setValidity('accountExists', true);
+              $scope.form.user.loginEmail.$setValidity('noAccount', true);
             });
         };
 
-        $scope.submitEmail = function () {
+        $scope.setPassword = function() {
+          $scope.setFirstPassword = true;
+          $scope.enterToken = false;
+        }
+
+        $scope.submitFirstPassword = function() {
+          // TODO validation
+          webmakerLoginService.setFirstPassword($scope.user.loginEmail, $scope.user.token, $scope.user.password, function() {
+            $scope.setFirstPassword = false;
+            $scope.setFirstPasswordSuccess = true;
+            if (!$rootScope.$$phase) {
+              $rootScope.$apply();
+            }
+          });
+        }
+
+        $scope.submit = function () {
           var isValid = emailRegex.test($scope.user.loginEmail);
           $scope.form.user.loginEmail.$setValidity("invalid", isValid);
           if (!isValid) {
             return;
           }
+
+          if ( $scope.usePasswordLogin ) {
+            webmakerLoginService.verifyPassword($scope.user.loginEmail, $scope.user.password, function(err, success) {
+              if ( err || !success ) {
+                console.error( 'failed to sign in, do something.' );
+                return
+              }
+              $modalInstance.dismiss('done');
+            });
+          } else {
           webmakerLoginService.request($scope.user.loginEmail);
-          $scope.enterToken = true;
+            $scope.enterEmail = false;
+            $scope.enterToken = true;
+          }
         };
 
         $scope.submitToken = function () {
@@ -120,7 +160,15 @@ angular
           $modalInstance.dismiss('cancel');
         };
 
-        webmakerLoginService.on('tokenlogin', function () {
+        $scope.continue = function () {
+          $modalInstance.dismiss('done');
+        };
+
+        webmakerLoginService.on('tokenlogin', function() {
+          $modalInstance.dismiss('done');
+        });
+
+        webmakerLoginService.on('password-login', function() {
           $modalInstance.dismiss('done');
         });
       };

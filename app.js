@@ -338,6 +338,9 @@ app.get('/check-email', webmakerAuth.handlers.emailExists);
 app.post('/request', webmakerAuth.handlers.request);
 app.post('/authenticateToken', webmakerAuth.handlers.authenticateToken);
 
+app.post('/setFirstPassword', webmakerAuth.handlers.setFirstPassword);
+app.post('/verifyPassword', webmakerAuth.handlers.verifyPassword);
+
 app.get("/healthcheck", routes.api.healthcheck);
 
 app.get('/signup/:auth?', routes.angular);
