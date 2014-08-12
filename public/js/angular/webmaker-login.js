@@ -81,7 +81,7 @@ angular
       var tokenLogin = function ($scope, $modalInstance, email) {
         $scope.form = {};
         $scope.user = {};
-        $scope.enterEmail = true;
+        $scope.enterEmail = $scope.showPersona = true;
 
         if ( email ) {
           $scope.user.loginEmail = email;
@@ -117,7 +117,7 @@ angular
         $scope.setPassword = function() {
           $scope.setFirstPassword = true;
           $scope.enterToken = false;
-        }
+        };
 
         $scope.submitFirstPassword = function() {
           // TODO validation
@@ -128,7 +128,7 @@ angular
               $rootScope.$apply();
             }
           });
-        }
+        };
 
         $scope.submit = function () {
           var isValid = emailRegex.test($scope.user.loginEmail);
@@ -136,6 +136,8 @@ angular
           if (!isValid) {
             return;
           }
+
+          $scope.showPersona = false;
 
           if ( $scope.usePasswordLogin ) {
             webmakerLoginService.verifyPassword($scope.user.loginEmail, $scope.user.password, function(err, success) {
@@ -152,6 +154,10 @@ angular
           }
         };
 
+        $scope.personaLogin = function () {
+          webmakerLoginService.login();
+        };
+
         $scope.submitToken = function () {
           webmakerLoginService.authenticateToken($scope.user.loginEmail, $scope.user.token);
         };
@@ -160,17 +166,17 @@ angular
           $modalInstance.dismiss('cancel');
         };
 
-        $scope.continue = function () {
+        function done() {
           $modalInstance.dismiss('done');
-        };
+        }
 
-        webmakerLoginService.on('tokenlogin', function() {
-          $modalInstance.dismiss('done');
-        });
+        $scope.continue = done;
 
-        webmakerLoginService.on('password-login', function() {
-          $modalInstance.dismiss('done');
-        });
+        webmakerLoginService.on('login', done);
+
+        webmakerLoginService.on('tokenlogin', done);
+
+        webmakerLoginService.on('password-login', done);
       };
     }
   ])

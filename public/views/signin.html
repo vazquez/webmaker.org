@@ -55,8 +55,10 @@
   </form>
 </div>
 <div class="modal-footer">
+  <span ng-show="showPersona">
+    Or log in with <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="personaLogin()">Mozilla Persona</button>
+  </span>
   <p ng-show="enterToken">
     Trouble with the key? <a href="#">Get help.</a> Frustrated with these keys? <button class="submit-userid btn btn-primary" type="button" ng-click="setPassword()">Set a password</button>
   </p>
-  <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">{{ 'Cancel' | i18n }}</button>
 </div>
