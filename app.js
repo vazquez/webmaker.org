@@ -459,6 +459,7 @@ app.get("/strings/:lang?", i18n.stringsRoute("en-US"));
 // Angular config
 var angularConfig = {
   accountSettingsUrl: env.get('LOGIN') + '/account',
+  loginV2Enabled: env.get("LOGIN_V2_ENABLED")
 };
 
 app.get('/angular-config.js', function (req, res) {

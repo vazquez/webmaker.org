@@ -8,6 +8,9 @@ angular
       // User urls
       $scope.accountSettingsUrl = config.accountSettingsUrl;
 
+      // login v2
+      $scope.loginV2Enabled = config.loginV2Enabled;
+
       // Start with collapsed state for navigation
       $scope.primaryCollapse = true;
       $scope.secondaryCollapse = true;
