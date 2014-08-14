@@ -340,6 +340,8 @@ app.post('/authenticateToken', webmakerAuth.handlers.authenticateToken);
 
 app.post('/setFirstPassword', webmakerAuth.handlers.setFirstPassword);
 app.post('/verifyPassword', webmakerAuth.handlers.verifyPassword);
+app.post('/requestReset', webmakerAuth.handlers.requestReset);
+app.post('/resetPassword', webmakerAuth.handlers.resetPassword);
 
 app.get("/healthcheck", routes.api.healthcheck);
 
@@ -362,6 +364,7 @@ app.get("/appmaker", routes.angular);
 app.get("/feedback", routes.angular);
 
 app.get("/make-your-own", routes.angular);
+app.get("/:locale?/password-reset/:email/:resetToken", routes.angular);
 app.get('/madewithcode-*', routes.angular);
 
 app.get("/gallery", routes.gallery({

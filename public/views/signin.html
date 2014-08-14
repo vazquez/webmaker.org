@@ -8,7 +8,7 @@
     <div ng-show="enterEmail">
       <div class="form-group">
         <label for="loginEmail">Email</label>
-        <input name="loginEmail" class="form-control" ng-blur="checkEmail();" ng-model="user.loginEmail" autocomplete="on" required>
+        <input name="loginEmail" class="form-control" ng-blur="checkEmail();" ng-model="user.loginEmail" autocomplete="on" required focus-on="login-email">
         <span class="help-block" ng-show="form.user.loginEmail.$error.invalid">That doesn't look like an email address!</span>
         <span class="help-block" ng-show="form.user.loginEmail.$error.noAccount">
           No account found for your email!
@@ -17,12 +17,16 @@
       </div>
       <div class="form-group" ng-show="usePasswordLogin">
         <label for="password">Password</label>
-        <input ng-model="user.password" type="password" name="password" required="">
+        <input class="form-control" ng-model="user.password" type="password" name="password" required="" focus-on="passwordInput">
+        <br>
+        Forget your password? <a href="#" ng-disabled="form.user.loginEmail.$error.noAccount || resetRequestSent" ng-click="resetPassword()">send me a reset email!</a>
       </div>
       <p>
-        By proceeding, you agree to Webmaker\'s <a href="#">Terms</a> & <a href="#">Privacy Policy</a>.
+        By proceeding, you agree to Webmaker's <a href="#">Terms</a> & <a href="#">Privacy Policy</a>.
       </p>
-      <button class="submit-userid btn btn-primary" type="button" ng-disabled="form.user.loginEmail.$error.noAccount" ng-click="submit()">Login</button>
+      <div class="alert alert-danger" ng-show="form.user.loginEmail.$error.failed">The email and/or password your entered in invalid.</div>
+      <div class="alert alert-danger" ng-show="form.user.loginEmail.$error.tokenSendFailed">There was a problem sending a login key to you, please try again.</div>
+      <button class="submit-userid btn btn-primary" type="button" ng-disabled="form.user.loginEmail.$error.noAccount || resetRequestSent" ng-click="submit()">Login</button>
     </div>
     <div ng-show="enterToken">
       <div class="form-group key-group">
@@ -38,17 +42,31 @@
       </div>
       <div class="form-group password-group">
         <label for="key">Enter a new password</label>
-        <input ng-model="user.password" type="password" required="">
+        <input ng-model="user.password" type="password" required="" ng-change="checkPasswords()">
+        <span ng-show="form.user.password.$error.isInvalidPassword" class="help-block" >
+          Error! your password:
+          <ul>
+            <li ng-show="form.user.password.$error.hasLowerCase">Must have a lower case letter (a-z)</li>
+            <li ng-show="form.user.password.$error.hasUpperCase">Must have an upper case letter (A-Z)</li>
+            <li ng-show="form.user.password.$error.hasDigitOrNonWord">Must contain at least one digit or non word character (1-9 or !@#$)</li>
+            <li ng-show="form.user.password.$error.longEnough">Must be at least 8 characters long</li>
+            <li ng-show="form.user.password.$error.notTooLong">Must be at less that 120 characters</li>
+          </ul>
+        </span>
       </div>
       <div class="form-group confirm-group">
         <label for="key">Confirm the new password</label>
-        <input ng-model="user.confirmPassword" type="password" required="">
+        <input ng-model="user.confirmPassword" type="password" required="" ng-change="checkPasswords();">
+        <span ng-show="form.user.password.$error.passwordsMatch" class="help-block">
+          The passwords entered do not match!
+        </span>
       </div>
       <button class="submit-userid btn btn-primary" type="button" ng-click="user.token && user.password && user.confirmPassword && user.password === user.confirmPassword && submitFirstPassword()">Set New Password</button>
     </div>
-    <div ng-show="setFirstPasswordSuccess">
+    <div ng-show="setFirstPasswordSuccess || resetSent">
       <div class="form-group">
-        <p>Password Set Successfully! You will be required to provide it to log in from now on.</p>
+        <p ng-show="setFirstPasswordSuccess">Password Set Successfully! You will be required to provide it to log in from now on.</p>
+        <p ng-show="resetSent">A reset request has been emailed to you, follow the instructions in it to reset your password.</p>
       </div>
       <button ng-click="continue()" class="create-user btn btn-primary" type="button">Continue</button>
     </div>

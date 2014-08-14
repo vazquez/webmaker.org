@@ -411,5 +411,7 @@
   "Language Preference": "Language Preference",
   "Webmaker": "Webmaker",
   "Webmaker - Sign Up": "Webmaker - Sign Up",
-  "user_deleted": "Your account has been deleted."
+  "user_deleted": "Your account has been deleted.",
+  "Password Reset": "Password Reset",
+  "password_reset_complete": "Your password has been reset successfully! You can now try and log in."
 }

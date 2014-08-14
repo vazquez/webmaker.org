@@ -57,6 +57,11 @@ angular.module('webmakerApp', ['ngRoute', 'ui.bootstrap', 'webmakerApp.services'
           controller: 'feedbackController',
           title: 'Feedback'
         })
+        .when('/:locale?/password-reset/:email/:resetToken', {
+          templateUrl: '/views/reset.html',
+          controller: 'resetPasswordController',
+          title: 'Password Reset'
+        })
         .when('/:locale?', {
           templateUrl: '/views/home.html',
           controller: 'homeController',

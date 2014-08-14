@@ -97,11 +97,19 @@ angular
       ];
     }
   ])
-  .controller('homeController', ['$rootScope', '$scope', 'wmNav', '$routeParams',
-    function ($rootScope, $scope, wmNav, $routeParams) {
+  .controller('homeController', ['$rootScope', '$scope', 'wmNav', '$routeParams', '$timeout',
+    function ($rootScope, $scope, wmNav, $routeParams, $timeout) {
       wmNav.page('home');
       wmNav.section('');
       $scope.userDel = $routeParams.userDel;
+      $scope.resetPassword = $routeParams.resetPassword;
+
+      if ( $scope.userDel || $scope.resetPassword ) {
+        // clear alerts after 10 seconds
+        $timeout(function() {
+          $scope.userDel = $scope.resetPassword = false;
+        }, 10000 );
+      }
 
       if ($routeParams.auth === 'login') {
         $rootScope.login();

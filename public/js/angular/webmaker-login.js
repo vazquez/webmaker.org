@@ -40,7 +40,6 @@ angular
       });
 
       auth.on('firstpasswordset', function(user) {
-        console.log( arguments );
         $rootScope._user = user;
       });
 
@@ -64,10 +63,51 @@ angular
       return auth;
     }
   ])
-  .controller('loginController', ['$rootScope', '$scope', '$http', '$modal', 'webmakerLoginService',
-    function ($rootScope, $scope, $http, $modal, webmakerLoginService) {
+  .factory('focus', function ($rootScope, $timeout) {
+    return function(name) {
+      $timeout(function (){
+        $rootScope.$broadcast('focusOn', name);
+      });
+    }
+  })
+  .factory('passwordCheck', function () {
+    return function($scope) {
+      var pass = $scope.user.password,
+          confirmPass = $scope.user.confirmPassword;
+
+      if ( pass ) {
+        var hasLowerCase = /[a-z]+/.test(pass),
+            hasUpperCase = /[A-Z]+/.test(pass),
+            digitNonWord = /[\d\W_]+/.test(pass),
+            longEnough = pass.length > 8,
+            notTooLong = pass.length < 120;
+
+        var isInvalidPassword = hasLowerCase && hasUpperCase && digitNonWord && longEnough && notTooLong;
+
+        $scope.form.user.password.$setValidity('hasLowerCase', hasLowerCase);
+        $scope.form.user.password.$setValidity('hasUpperCase', hasUpperCase);
+        $scope.form.user.password.$setValidity('hasDigitOrNonWord', digitNonWord);
+        $scope.form.user.password.$setValidity('longEnough', longEnough);
+        $scope.form.user.password.$setValidity('notTooLong', notTooLong);
+        $scope.form.user.password.$setValidity('isInvalidPassword', isInvalidPassword);
+
+        if ( pass.length && confirmPass && confirmPass.length ) {
+          $scope.form.user.password.$setValidity('passwordsMatch', pass === confirmPass);
+        }
+      }
+    };
+  })
+  .controller('loginController', ['$rootScope', '$scope', '$http', '$modal', '$timeout', 'webmakerLoginService', 'focus', 'passwordCheck',
+    function ($rootScope, $scope, $http, $modal, $timeout, webmakerLoginService, focus, passwordCheck) {
+
+      function apply() {
+        if (!$rootScope.$$phase) {
+          $rootScope.$apply();
+        }
+      }
+
       $rootScope.tokenLogin = function (email) {
-        $modal.open({
+        var a = $modal.open({
           templateUrl: '/views/signin.html',
           controller: tokenLogin,
           resolve: {
@@ -75,6 +115,11 @@ angular
               return email;
             }
           }
+        })
+        .opened.then(function() {
+          $timeout(function() {
+            focus('login-email');
+          }, 0);
         });
       };
 
@@ -107,6 +152,9 @@ angular
             .get(webmakerLoginService.urls.checkEmail + $scope.user.loginEmail)
             .success(function (resp) {
               $scope.usePasswordLogin = resp.usePasswordLogin;
+              if ( resp.usePasswordLogin ) {
+                focus('passwordInput');
+              }
               $scope.form.user.loginEmail.$setValidity('noAccount', resp.exists);
             })
             .error(function (err) {
@@ -119,14 +167,16 @@ angular
           $scope.enterToken = false;
         };
 
+        $scope.checkPasswords = function() {
+          passwordCheck($scope);
+        };
+
         $scope.submitFirstPassword = function() {
           // TODO validation
           webmakerLoginService.setFirstPassword($scope.user.loginEmail, $scope.user.token, $scope.user.password, function() {
             $scope.setFirstPassword = false;
             $scope.setFirstPasswordSuccess = true;
-            if (!$rootScope.$$phase) {
-              $rootScope.$apply();
-            }
+            apply();
           });
         };
 
@@ -142,16 +192,52 @@ angular
           if ( $scope.usePasswordLogin ) {
             webmakerLoginService.verifyPassword($scope.user.loginEmail, $scope.user.password, function(err, success) {
               if ( err || !success ) {
-                console.error( 'failed to sign in, do something.' );
-                return
+                $scope.form.user.loginEmail.$setValidity("failed", false);
+                $timeout(function() {
+                  $scope.form.user.loginEmail.$setValidity("failed", true);
+                }, 5000);
+                apply();
+                return;
               }
               $modalInstance.dismiss('done');
             });
           } else {
-          webmakerLoginService.request($scope.user.loginEmail);
-            $scope.enterEmail = false;
-            $scope.enterToken = true;
+            webmakerLoginService.request($scope.user.loginEmail, function(err) {
+              if ( err ) {
+                $scope.form.user.loginEmail.$setValidity("tokenSendFailed", false);
+                $timeout(function() {
+                  $scope.form.user.loginEmail.$setValidity("tokenSendFailed", true);
+                }, 5000);
+                apply();
+              } else {
+                $scope.enterEmail = false;
+                $scope.enterToken = true;
+                apply();
+              }
+            });
           }
+        };
+
+        $scope.resetPassword = function() {
+          var isValid = emailRegex.test($scope.user.loginEmail);
+          $scope.resetRequestSent = true;
+          $scope.form.user.loginEmail.$setValidity("invalid", isValid);
+          if (!isValid) {
+            return;
+          }
+
+          $scope.showPersona = false;
+
+          webmakerLoginService.requestReset($scope.user.loginEmail, function(err) {
+            if ( err ) {
+              console.error(err);
+              $scope.resetRequestSent = false;
+            } else {
+              $scope.enterEmail = false;
+              $scope.resetSent = true;
+            }
+            apply()
+          });
         };
 
         $scope.personaLogin = function () {
@@ -182,6 +268,12 @@ angular
   ])
   .controller('createUserController', ['$rootScope', '$scope', '$http', '$modal', 'webmakerLoginService',
     function ($rootScope, $scope, $http, $modal, webmakerLoginService) {
+
+      function apply() {
+        if (!$rootScope.$$phase) {
+          $rootScope.$apply();
+        }
+      }
 
       $rootScope.createUserTwo = function (email) {
         $modal.open({
@@ -250,9 +342,7 @@ angular
             }, function (err, user) {
               $scope.selectUsername = false;
               $scope.welcome = true;
-              if (!$rootScope.$$phase) {
-                $rootScope.$apply();
-              }
+              apply();
             });
           }
         };
@@ -286,6 +376,48 @@ angular
               $scope.form.user.username.$setValidity('taken', true);
             });
         };
+      };
+    }
+  ])
+  .controller('resetPasswordController', ['$rootScope', '$scope', '$route', '$location', 'webmakerLoginService', 'passwordCheck',
+    function ($rootScope, $scope, $route, $location, webmakerLoginService, passwordCheck) {
+      $scope.form = {};
+      $scope.user = {};
+
+      $scope.user.email = $route.current.params.email;
+      $scope.user.resetToken = $route.current.params.resetToken;
+
+      function apply() {
+        if (!$rootScope.$$phase) {
+          $rootScope.$apply();
+        }
+      }
+
+      $scope.checkPasswords = function() {
+        console.log( $scope.form );
+        passwordCheck($scope);
+      };
+
+      $scope.submitChanges = function() {
+        $scope.resetFailed = false;
+        $scope.resetInProgress = true;
+
+        webmakerLoginService.resetPassword(
+          $scope.user.email,
+          $scope.user.resetToken,
+          $scope.user.password,
+          function done(err) {
+            if (err) {
+              $scope.resetInProgress = false;
+              console.error(err);
+              $scope.resetFailed = true;
+            } else {
+              $location.path( "/" );
+              $location.search( "resetPassword=true" );
+            }
+            apply();
+          }
+        );
       };
     }
   ]);
