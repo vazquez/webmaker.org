@@ -39,7 +39,7 @@ angular
         apply();
       });
 
-      auth.on('firstpasswordset', function(user) {
+      auth.on('firstpasswordset', function (user) {
         $rootScope._user = user;
       });
 
@@ -54,7 +54,7 @@ angular
 
       var searchObj = $location.search();
 
-      if ( searchObj.e && searchObj.t ) {
+      if (searchObj.e && searchObj.t) {
         auth.authenticateToken();
       }
 
@@ -64,23 +64,23 @@ angular
     }
   ])
   .factory('focus', function ($rootScope, $timeout) {
-    return function(name) {
-      $timeout(function (){
+    return function (name) {
+      $timeout(function () {
         $rootScope.$broadcast('focusOn', name);
       });
-    }
+    };
   })
   .factory('passwordCheck', function () {
-    return function($scope) {
+    return function ($scope) {
       var pass = $scope.user.password,
-          confirmPass = $scope.user.confirmPassword;
+        confirmPass = $scope.user.confirmPassword;
 
-      if ( pass ) {
+      if (pass) {
         var hasLowerCase = /[a-z]+/.test(pass),
-            hasUpperCase = /[A-Z]+/.test(pass),
-            digitNonWord = /[\d\W_]+/.test(pass),
-            longEnough = pass.length > 8,
-            notTooLong = pass.length < 120;
+          hasUpperCase = /[A-Z]+/.test(pass),
+          digitNonWord = /[\d\W_]+/.test(pass),
+          longEnough = pass.length >= 8,
+          notTooLong = pass.length <= 120;
 
         var isInvalidPassword = hasLowerCase && hasUpperCase && digitNonWord && longEnough && notTooLong;
 
@@ -91,7 +91,7 @@ angular
         $scope.form.user.password.$setValidity('notTooLong', notTooLong);
         $scope.form.user.password.$setValidity('isInvalidPassword', isInvalidPassword);
 
-        if ( pass.length && confirmPass && confirmPass.length ) {
+        if (pass.length && confirmPass && confirmPass.length) {
           $scope.form.user.password.$setValidity('passwordsMatch', pass === confirmPass);
         }
       }
@@ -107,20 +107,20 @@ angular
       }
 
       $rootScope.tokenLogin = function (email) {
-        var a = $modal.open({
+        $modal.open({
           templateUrl: '/views/signin.html',
           controller: tokenLogin,
           resolve: {
-            email: function() {
+            email: function () {
               return email;
             }
           }
         })
-        .opened.then(function() {
-          $timeout(function() {
+        .opened.then(function () {
+          $timeout(function () {
             focus('login-email');
           }, 0);
-        });
+        })
       };
 
       var tokenLogin = function ($scope, $modalInstance, email) {
@@ -128,7 +128,7 @@ angular
         $scope.user = {};
         $scope.enterEmail = $scope.showPersona = true;
 
-        if ( email ) {
+        if (email) {
           $scope.user.loginEmail = email;
         }
 
@@ -152,7 +152,7 @@ angular
             .get(webmakerLoginService.urls.checkEmail + $scope.user.loginEmail)
             .success(function (resp) {
               $scope.usePasswordLogin = resp.usePasswordLogin;
-              if ( resp.usePasswordLogin ) {
+              if (resp.usePasswordLogin) {
                 focus('passwordInput');
               }
               $scope.form.user.loginEmail.$setValidity('noAccount', resp.exists);
@@ -162,22 +162,28 @@ angular
             });
         };
 
-        $scope.setPassword = function() {
+        $scope.setPassword = function () {
           $scope.setFirstPassword = true;
           $scope.enterToken = false;
         };
 
-        $scope.checkPasswords = function() {
+        $scope.checkPasswords = function () {
           passwordCheck($scope);
         };
 
-        $scope.submitFirstPassword = function() {
+        $scope.submitFirstPassword = function () {
           // TODO validation
-          webmakerLoginService.setFirstPassword($scope.user.loginEmail, $scope.user.token, $scope.user.password, function() {
+          webmakerLoginService.setFirstPassword($scope.user.loginEmail, $scope.user.token, $scope.user.password, function () {
             $scope.setFirstPassword = false;
             $scope.setFirstPasswordSuccess = true;
             apply();
           });
+        };
+
+        // this is borked, causes $modal to throw when the create user modal attempts to close..
+        $scope.switchToSignup = function () {
+          $modalInstance.close();
+          $rootScope.createUser_v2($scope.user.loginEmail);
         };
 
         $scope.submit = function () {
@@ -189,25 +195,25 @@ angular
 
           $scope.showPersona = false;
 
-          if ( $scope.usePasswordLogin ) {
-            webmakerLoginService.verifyPassword($scope.user.loginEmail, $scope.user.password, function(err, success) {
-              if ( err || !success ) {
+          if ($scope.usePasswordLogin) {
+            webmakerLoginService.verifyPassword($scope.user.loginEmail, $scope.user.password, function (err, success) {
+              if (err || !success) {
                 $scope.form.user.loginEmail.$setValidity("failed", false);
-                $timeout(function() {
+                $timeout(function () {
                   $scope.form.user.loginEmail.$setValidity("failed", true);
-                }, 5000);
+                }, 10000);
                 apply();
                 return;
               }
               $modalInstance.dismiss('done');
             });
           } else {
-            webmakerLoginService.request($scope.user.loginEmail, function(err) {
-              if ( err ) {
+            webmakerLoginService.request($scope.user.loginEmail, function (err) {
+              if (err) {
                 $scope.form.user.loginEmail.$setValidity("tokenSendFailed", false);
-                $timeout(function() {
+                $timeout(function () {
                   $scope.form.user.loginEmail.$setValidity("tokenSendFailed", true);
-                }, 5000);
+                }, 10000);
                 apply();
               } else {
                 $scope.enterEmail = false;
@@ -218,7 +224,7 @@ angular
           }
         };
 
-        $scope.resetPassword = function() {
+        $scope.resetPassword = function () {
           var isValid = emailRegex.test($scope.user.loginEmail);
           $scope.resetRequestSent = true;
           $scope.form.user.loginEmail.$setValidity("invalid", isValid);
@@ -228,15 +234,15 @@ angular
 
           $scope.showPersona = false;
 
-          webmakerLoginService.requestReset($scope.user.loginEmail, function(err) {
-            if ( err ) {
+          webmakerLoginService.requestReset($scope.user.loginEmail, function (err) {
+            if (err) {
               console.error(err);
               $scope.resetRequestSent = false;
             } else {
               $scope.enterEmail = false;
               $scope.resetSent = true;
             }
-            apply()
+            apply();
           });
         };
 
@@ -256,7 +262,8 @@ angular
           $modalInstance.dismiss('done');
         }
 
-        $scope.continue = done;
+        $scope.
+        continue = done;
 
         webmakerLoginService.on('login', done);
 
@@ -266,7 +273,7 @@ angular
       };
     }
   ])
-  .controller('createUserController', ['$rootScope', '$scope', '$http', '$modal', 'webmakerLoginService',
+  .controller('createUserController_v2', ['$rootScope', '$scope', '$http', '$modal', 'webmakerLoginService',
     function ($rootScope, $scope, $http, $modal, webmakerLoginService) {
 
       function apply() {
@@ -275,24 +282,24 @@ angular
         }
       }
 
-      $rootScope.createUserTwo = function (email) {
+      $rootScope.createUser_v2 = function (email) {
         $modal.open({
-          templateUrl: '/views/create-user-form-2.html',
-          controller: createUserCtrlTwo,
+          templateUrl: '/views/create-user-form-v2.html',
+          controller: createUserCtrl_v2,
           resolve: {
-            email: function() {
+            email: function () {
               return email;
             }
           }
         });
       };
 
-      var createUserCtrlTwo = function ($scope, $modalInstance, email) {
+      var createUserCtrl_v2 = function ($scope, $modalInstance, email) {
 
         $scope.form = {};
         $scope.user = {};
 
-        if ( email ) {
+        if (email) {
           $scope.user.email = email;
         }
 
@@ -337,7 +344,7 @@ angular
 
         $scope.submitUsername = function () {
           if ($scope.form.user.$valid && $scope.form.agree) {
-            webmakerLoginService.createUser2({
+            webmakerLoginService.createNewUser({
               user: $scope.user
             }, function (err, user) {
               $scope.selectUsername = false;
@@ -347,7 +354,8 @@ angular
           }
         };
 
-        $scope.continue = function () {
+        $scope.
+        continue = function () {
           $modalInstance.dismiss('done');
         };
 
@@ -393,12 +401,12 @@ angular
         }
       }
 
-      $scope.checkPasswords = function() {
-        console.log( $scope.form );
+      $scope.checkPasswords = function () {
+        console.log($scope.form);
         passwordCheck($scope);
       };
 
-      $scope.submitChanges = function() {
+      $scope.submitChanges = function () {
         $scope.resetFailed = false;
         $scope.resetInProgress = true;
 
@@ -412,8 +420,8 @@ angular
               console.error(err);
               $scope.resetFailed = true;
             } else {
-              $location.path( "/" );
-              $location.search( "resetPassword=true" );
+              $location.path("/");
+              $location.search("resetPassword=true");
             }
             apply();
           }

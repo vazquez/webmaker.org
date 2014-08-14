@@ -12,7 +12,7 @@
         <span class="help-block" ng-show="form.user.loginEmail.$error.invalid">That doesn't look like an email address!</span>
         <span class="help-block" ng-show="form.user.loginEmail.$error.noAccount">
           No account found for your email!
-          <button type="button" class="create-user btn btn-primary" ng-click="cancel(); createUserTwo(user.loginEmail);">Sign Up!</button>
+          <button type="button" class="create-user btn btn-primary" ng-click="switchToSignup();">Sign Up!</button>
         </span>
       </div>
       <div class="form-group" ng-show="usePasswordLogin">

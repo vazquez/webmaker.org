@@ -331,17 +331,17 @@ var middleware = require("./lib/middleware");
 app.post('/verify', webmakerAuth.handlers.verify);
 app.post('/authenticate', webmakerAuth.handlers.authenticate);
 app.post('/create', webmakerAuth.handlers.create);
-app.post('/create2', webmakerAuth.handlers.create2);
 app.post('/logout', webmakerAuth.handlers.logout);
 app.post('/check-username', webmakerAuth.handlers.exists);
-app.get('/check-email', webmakerAuth.handlers.emailExists);
-app.post('/request', webmakerAuth.handlers.request);
-app.post('/authenticateToken', webmakerAuth.handlers.authenticateToken);
 
-app.post('/setFirstPassword', webmakerAuth.handlers.setFirstPassword);
-app.post('/verifyPassword', webmakerAuth.handlers.verifyPassword);
-app.post('/requestReset', webmakerAuth.handlers.requestReset);
-app.post('/resetPassword', webmakerAuth.handlers.resetPassword);
+app.post('/v2/create', webmakerAuth.handlers.createUser);
+app.get('/v2/check-email', webmakerAuth.handlers.emailExists);
+app.post('/v2/request', webmakerAuth.handlers.request);
+app.post('/v2/authenticateToken', webmakerAuth.handlers.authenticateToken);
+app.post('/v2/setFirstPassword', webmakerAuth.handlers.setFirstPassword);
+app.post('/v2/verifyPassword', webmakerAuth.handlers.verifyPassword);
+app.post('/v2/requestReset', webmakerAuth.handlers.requestReset);
+app.post('/v2/resetPassword', webmakerAuth.handlers.resetPassword);
 
 app.get("/healthcheck", routes.api.healthcheck);
 

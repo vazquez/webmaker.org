@@ -104,11 +104,11 @@ angular
       $scope.userDel = $routeParams.userDel;
       $scope.resetPassword = $routeParams.resetPassword;
 
-      if ( $scope.userDel || $scope.resetPassword ) {
+      if ($scope.userDel || $scope.resetPassword) {
         // clear alerts after 10 seconds
-        $timeout(function() {
+        $timeout(function () {
           $scope.userDel = $scope.resetPassword = false;
-        }, 10000 );
+        }, 10000);
       }
 
       if ($routeParams.auth === 'login') {
