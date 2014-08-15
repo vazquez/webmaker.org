@@ -404,7 +404,6 @@ angular
       }
 
       $scope.checkPasswords = function () {
-        console.log($scope.form);
         passwordCheck($scope);
       };
 
