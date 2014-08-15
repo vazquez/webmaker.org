@@ -1,82 +1,81 @@
 <div class="modal-header">
   <button ng-click="cancel()" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-  <h3 class="modal-title" ng-hide="enterToken">Login</h3>
-  <span ng-show="enterToken"><i class="fa fa-envelope" style="color:#aaa;"> </i> We emailed you a key</span>
+  <h3 class="modal-title" ng-hide="enterToken">{{ 'Sign in' | i18n }}</h3>
+  <span ng-show="enterToken"><i class="fa fa-envelope" style="color:#aaa;"> </i> {{ 'We emailed you a key' | i18n }}</span>
 </div>
 <div class="modal-body">
   <form class="form" name="form.user" novalidate>
     <div ng-show="enterEmail">
       <div class="form-group">
-        <label for="loginEmail">Email</label>
+        <label for="loginEmail">{{ 'Email' | i18n }}</label>
         <input name="loginEmail" class="form-control" ng-blur="checkEmail();" ng-model="user.loginEmail" autocomplete="on" required focus-on="login-email">
-        <span class="help-block" ng-show="form.user.loginEmail.$error.invalid">That doesn't look like an email address!</span>
+        <span class="help-block" ng-show="form.user.loginEmail.$error.invalid">{{ 'That does not look like an email address' | i18n }}</span>
         <span class="help-block" ng-show="form.user.loginEmail.$error.noAccount">
-          No account found for your email!
-          <button type="button" class="create-user btn btn-primary" ng-click="switchToSignup();">Sign Up!</button>
+          {{ 'No account found for your email' | i18n }}
+          <button type="button" class="create-user btn btn-primary" ng-click="switchToSignup();">{{'Sign up' | i18n}}</button>
         </span>
       </div>
       <div class="form-group" ng-show="usePasswordLogin">
-        <label for="password">Password</label>
+        <label for="password">{{ 'Password' | i18n }}</label>
         <input class="form-control" ng-model="user.password" type="password" name="password" required="" focus-on="passwordInput">
         <br>
-        Forget your password? <a href="#" ng-disabled="form.user.loginEmail.$error.noAccount || resetRequestSent" ng-click="resetPassword()">send me a reset email!</a>
+        {{ 'Forget your password' | i18n }} <a href="#" ng-disabled="form.user.loginEmail.$error.noAccount || resetRequestSent" ng-click="resetPassword()">{{ 'send me a reset email' | i18n }}</a>
       </div>
-      <p>
-        By proceeding, you agree to Webmaker's <a href="#">Terms</a> & <a href="#">Privacy Policy</a>.
-      </p>
-      <div class="alert alert-danger" ng-show="form.user.loginEmail.$error.failed">The email and/or password your entered in invalid.</div>
-      <div class="alert alert-danger" ng-show="form.user.loginEmail.$error.tokenSendFailed">There was a problem sending a login key to you, please try again.</div>
-      <button class="submit-userid btn btn-primary" type="button" ng-disabled="form.user.loginEmail.$error.noAccount || resetRequestSent" ng-click="submit()">Login</button>
+      <p bind-unsafe-html="'webmakerAuthAgreeToTerms' | i18n"></p>
+      <div class="alert alert-danger" ng-show="form.user.loginEmail.$error.failed">{{ 'invalid email or password' | i18n }}</div>
+      <div class="alert alert-danger" ng-show="form.user.loginEmail.$error.tokenSendFailed">{{ 'problem sending token' | i18n }}</div>
+      <button class="submit-userid btn btn-primary" type="button" ng-disabled="form.user.loginEmail.$error.noAccount || resetRequestSent" ng-click="submit()">{{ 'Sign in' | i18n }}</button>
     </div>
     <div ng-show="enterToken">
       <div class="form-group key-group">
-        <label for="key">Enter your key to login</label>
+        <label for="key">{{ 'Enter your key to login' | i18n }}</label>
         <input ng-model="user.token" name="key" class="form-control" required="">
       </div>
-      <button class="submit-userid btn btn-primary" type="button" ng-click="user.token && submitToken()">Submit Key</button>
+      <button class="submit-userid btn btn-primary" type="button" ng-click="user.token && submitToken()">{{ 'Submit Key' | i18n }}</button>
     </div>
     <div ng-show="setFirstPassword">
       <div class="form-group key-group">
-        <label for="key">Enter the Login key we just sent you</label>
+        <label for="key">{{ 'Enter the Login key' | i18n }}</label>
         <input ng-model="user.token" name="key" class="form-control" required="">
       </div>
       <div class="form-group password-group">
-        <label for="key">Enter a new password</label>
+        <label for="key">{{ 'Enter a new password' | i18n }}</label>
         <input ng-model="user.password" type="password" required="" ng-change="checkPasswords()">
         <span ng-show="form.user.password.$error.isInvalidPassword" class="help-block" >
-          Error! your password:
+          {{ 'Error! your password:'  | i18n }}
           <ul>
-            <li ng-show="form.user.password.$error.hasLowerCase">Must have a lower case letter (a-z)</li>
-            <li ng-show="form.user.password.$error.hasUpperCase">Must have an upper case letter (A-Z)</li>
-            <li ng-show="form.user.password.$error.hasDigitOrNonWord">Must contain at least one digit or non word character (1-9 or !@#$)</li>
-            <li ng-show="form.user.password.$error.longEnough">Must be at least 8 characters long</li>
-            <li ng-show="form.user.password.$error.notTooLong">Must be at less that 120 characters</li>
+            <li ng-show="form.user.password.$error.hasLowerCase">{{'Must have a lower case letter' | i18n }}</li>
+            <li ng-show="form.user.password.$error.hasUpperCase">{{'Must have an upper case letter' | i18n }}</li>
+            <li ng-show="form.user.password.$error.hasDigitOrNonWord">{{'Must contain at least one digit or non word character' | i18n }}</li>
+            <li ng-show="form.user.password.$error.longEnough">{{'Must be at least 8 characters long' | i18n }}</li>
+            <li ng-show="form.user.password.$error.notTooLong">{{'Must be at less that 120 characters' | i18n }}</li>
           </ul>
         </span>
       </div>
       <div class="form-group confirm-group">
-        <label for="key">Confirm the new password</label>
+        <label for="key">{{ 'Confirm the new password' | i18n }}</label>
         <input ng-model="user.confirmPassword" type="password" required="" ng-change="checkPasswords();">
         <span ng-show="form.user.password.$error.passwordsMatch" class="help-block">
-          The passwords entered do not match!
+          {{ 'The passwords entered do not match!' | i18n }}
         </span>
       </div>
-      <button class="submit-userid btn btn-primary" type="button" ng-click="user.token && user.password && user.confirmPassword && user.password === user.confirmPassword && submitFirstPassword()">Set New Password</button>
+      <button class="submit-userid btn btn-primary" type="button" ng-click="user.token && user.password && user.confirmPassword && user.password === user.confirmPassword && submitFirstPassword()">{{ 'Create Password' | i18n }}</button>
     </div>
     <div ng-show="setFirstPasswordSuccess || resetSent">
       <div class="form-group">
-        <p ng-show="setFirstPasswordSuccess">Password Set Successfully! You will be required to provide it to log in from now on.</p>
-        <p ng-show="resetSent">A reset request has been emailed to you, follow the instructions in it to reset your password.</p>
+        <p ng-show="setFirstPasswordSuccess">{{'Password Set Successfully' | i18n }}</p>
+        <p ng-show="resetSent">{{ 'A reset request has been emailed' | i18n }}</p>
       </div>
-      <button ng-click="continue()" class="create-user btn btn-primary" type="button">Continue</button>
+      <button ng-click="continue()" class="create-user btn btn-primary" type="button">{{ 'Continue' | i18n }}</button>
     </div>
   </form>
 </div>
 <div class="modal-footer">
   <span ng-show="showPersona">
-    Or log in with <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="personaLogin()">Mozilla Persona</button>
+    {{ 'Or log in with' | i18n }} <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="personaLogin()">{{ 'Mozilla Persona' | i18n }}</button>
   </span>
   <p ng-show="enterToken">
-    Trouble with the key? <a href="#">Get help.</a> Frustrated with these keys? <button class="submit-userid btn btn-primary" type="button" ng-click="setPassword()">Set a password</button>
+    <span bind-unsafe-html="'Trouble with the key' | i18n"></span>
+    {{ 'Frustrated with these keys' | i18n }} <button class="submit-userid btn btn-primary" type="button" ng-click="setPassword()">{{ 'Set a password' | i18n }}</button>
   </p>
 </div>
