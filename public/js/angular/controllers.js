@@ -106,11 +106,12 @@ angular
       wmNav.section('');
       $scope.userDel = $routeParams.userDel;
       $scope.resetPassword = $routeParams.resetPassword;
+      $scope.otpEnabled = $routeParams.otp;
 
       if ($scope.userDel || $scope.resetPassword) {
         // clear alerts after 10 seconds
         $timeout(function () {
-          $scope.userDel = $scope.resetPassword = false;
+          $scope.userDel = $scope.resetPassword = $scope.otpEnabled = false;
         }, 10000);
       }
 

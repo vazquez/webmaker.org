@@ -342,6 +342,7 @@ app.post('/v2/setFirstPassword', webmakerAuth.handlers.setFirstPassword);
 app.post('/v2/verifyPassword', webmakerAuth.handlers.verifyPassword);
 app.post('/v2/requestReset', webmakerAuth.handlers.requestReset);
 app.post('/v2/resetPassword', webmakerAuth.handlers.resetPassword);
+app.post('/v2/removePassword', webmakerAuth.handlers.removePassword);
 
 app.get("/healthcheck", routes.api.healthcheck);
 

@@ -28,7 +28,8 @@
                 </span>
               </div>
               <div class="alert alert-danger" ng-show="resetFailed">{{ 'Your Password Reset Failed' | i18n }}</div>
-              <button type="button" class="btn btn-primary" ng-disable="resetInProgress" ng-disabled="!user.password || !user.confirmPassword || form.user.$invalid" ng-click="submitChanges();">{{ 'Change Password' | i18n }}</button>
+              <button type="button" class="btn btn-primary" ng-disable="actionInProgress" ng-disabled="!user.password || !user.confirmPassword || form.user.$invalid" ng-click="submitChanges();">{{ 'Change Password' | i18n }}</button>
+              <button type="button" class="btn btn-primary" ng-disable="actionInProgress" ng-click="useOneTimePasswords();">{{ 'Switch To OTPs' | i18n }}</button>
             </form>
           </div>
         </div>

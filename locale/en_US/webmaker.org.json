@@ -417,6 +417,7 @@
   "Forget your password": "Forget your password?",
   "send me a reset email": "send me a reset email!",
   "password_reset_complete": "Your password has been reset successfully! You can now try and log in.",
+  "otp_enabled": "You have enabled one-time password logins for your account!",
   "We emailed you a key": "We emailed you a key",
   "That does not look like an email address": "That doesn't look like an email address!",
   "No account found for your email": "No account found for your email!",
@@ -447,5 +448,6 @@
   "New Password": "New Password",
   "Confirm the password entered above": "Confirm the password entered above.",
   "Your Password Reset Failed": "Your Password Reset Failed! Try reloading the page or resending the reset request.",
-  "Change Password": "Change Password"
+  "Change Password": "Change Password",
+  "Switch To OTPs": "Switch to One-Time Passwords"
 }

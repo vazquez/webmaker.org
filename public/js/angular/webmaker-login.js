@@ -409,7 +409,7 @@ angular
 
       $scope.submitChanges = function () {
         $scope.resetFailed = false;
-        $scope.resetInProgress = true;
+        $scope.actionInProgress = true;
 
         webmakerLoginService.resetPassword(
           $scope.user.email,
@@ -417,12 +417,31 @@ angular
           $scope.user.password,
           function done(err) {
             if (err) {
-              $scope.resetInProgress = false;
-              console.error(err);
+              $scope.actionInProgress = false;
               $scope.resetFailed = true;
             } else {
               $location.path("/");
               $location.search("resetPassword=true");
+            }
+            apply();
+          }
+        );
+      };
+
+      $scope.useOneTimePasswords = function() {
+        $scope.changeFailed = false;
+        $scope.actionInProgress = true;
+
+        webmakerLoginService.removePassword(
+          $scope.user.email,
+          $scope.user.resetToken,
+          function done(err) {
+            if (err) {
+              $scope.actionInProgress = false;
+              $scope.changeFailed = true;
+            } else {
+              $location.path("/");
+              $location.search("otp=true");
             }
             apply();
           }
