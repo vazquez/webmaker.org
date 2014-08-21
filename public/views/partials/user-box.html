@@ -16,8 +16,8 @@
   </ul>
   </li>
   <li ng-if="loginV2Enabled">
-    <button ng-cloak ng-controller="createUserController_v2" ng-show="!_user.email" class="btn btn-primary navbar-btn" ng-click="createUser_v2()">{{ 'Create an account' | i18n }}</button>
-    <button ng-cloak ng-controller="loginController" ng-show="!_user.email" class="btn btn-primary navbar-btn" ng-click="tokenLogin()">{{'Sign in' | i18n }}</button>
+    <button ng-cloak ng-controller="createUserController_v2" ng-show="!_user.email" class="btn btn-primary navbar-btn" ng-click="createUser_v2()">{{ 'Sign up' | i18n }}</button>
+    <button ng-cloak ng-controller="loginController" ng-show="!_user.email" class="btn btn-secondary-nav navbar-btn" ng-click="tokenLogin()">{{'Log in' | i18n }}</button>
   </li>
   <li ng-if="!loginV2Enabled">
     <button ng-cloak ng-show="!_user.email" class="btn btn-primary navbar-btn" ng-click="login();">{{'Sign in' | i18n }}</button>
