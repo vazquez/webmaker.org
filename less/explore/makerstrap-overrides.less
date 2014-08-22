@@ -105,10 +105,20 @@ dd {
 */
 @modal-inner-padding: 40px;
 @modal-title-padding: 40px;
+@modal-padding: 2rem 3rem 0 3rem;
 .modal-header {
-  padding: 2rem 3rem 0 3rem;
+  padding: @modal-padding;
   border-bottom: none;
   padding-bottom: 0;
+}
+.modal-body {
+  padding: 0 3rem;
+  label[for=email] {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+  }
 }
 .modal-footer {
   padding-top: 0;

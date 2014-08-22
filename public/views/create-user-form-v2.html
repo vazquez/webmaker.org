@@ -10,7 +10,7 @@
     <div ng-show="enterEmail">
       <div class="form-group">
         <label for="email">{{ 'Email' | i18n }}</label>
-        <input ng-model="user.email" ng-blur="checkEmail();" name="email" autocomplete="off" required>
+        <input ng-model="user.email" ng-blur="checkEmail();" name="email" class="form-control" type="email" autocomplete="off" required>
         <span class="help-block" ng-show="form.user.email.$error.invalid">That doesn't look like an email address!</span>
         <span class="help-block" ng-show="form.user.email.$error.accountExists">
           That email already has a Webmaker Account!
