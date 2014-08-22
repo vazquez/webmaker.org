@@ -19,11 +19,12 @@
       </div>
       <div class="checkbox">
         <label>
-          <input type="checkbox" ng-disabled="form.user.email.$error.accountExists" ng-model="form.agree" name="agreeToTerms"> <span bind-unsafe-html="'webmakerAuthAgreeToTerms' | i18n"></span>
+          <input type="checkbox" ng-disabled="form.user.email.$error.accountExists" ng-model="form.agree" name="agreeToTerms"> <span class="terms-conditions" bind-unsafe-html="'webmakerAuthAgreeToTerms' | i18n"></span>
           <span class="help-block" ng-show="submit && !form.agree">{{ 'webmakerAuthAgreeError' | i18n }}</span>
         </label>
       </div>
-      <button ng-click="submitEmail()" ng-disabled="form.user.email.$error.accountExists" class="create-user btn btn-primary" type="button">Next</button>
+      <button ng-click="submitEmail()" ng-disabled="form.user.email.$error.accountExists" class="create-user btn btn-primary" type="button">Sign up</button>
+      <div class="persona-login">or <a href="#">log in with Persona</a></div>
     </div>
 
     <div ng-show="selectUsername">
@@ -48,5 +49,5 @@
   </form>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-default" data-dismiss="modal" ng-hide="welcome" ng-click="cancel()">{{ 'Cancel' | i18n }}</button>
+  <!-- <button type="button" class="btn btn-default" data-dismiss="modal" ng-hide="welcome" ng-click="cancel()">{{ 'Cancel' | i18n }}</button> -->
 </div>
