@@ -23,17 +23,21 @@
           <span class="help-block" ng-show="submit && !form.agree">{{ 'webmakerAuthAgreeError' | i18n }}</span>
         </label>
       </div>
-      <button ng-click="submitEmail()" ng-disabled="form.user.email.$error.accountExists" class="create-user btn btn-primary" type="button">Sign up</button>
-      <div class="persona-login">or <a href="#">log in with Persona</a></div>
+      <div class="cta">
+        <button ng-click="submitEmail()" ng-disabled="form.user.email.$error.accountExists" class="create-user btn btn-primary" type="button">Sign up</button>
+        <div class="persona-login">or <a href="#">log in with Persona</a></div>
+      </div>
     </div>
 
     <div ng-show="selectUsername">
       <div class="form-group">
         <label for="username">Select Username</label>
-        <input ng-model="user.username" name="username" ng-change="checkUsername()" autocomplete="off" required>
+        <input ng-model="user.username" name="username" ng-change="checkUsername()" class="form-control" autocomplete="off" required>
         <span class="help-block" ng-show="form.user.username.$error.taken">{{ 'webmakerAuthTakenError' | i18n }}</span>
       </div>
-      <button ng-click="submitUsername()" class="create-user btn btn-primary" type="button">{{ 'webmakerAuthCreateAccount' | i18n }}</button>
+      <div class="cta">
+        <button ng-click="submitUsername()" class="create-user btn btn-primary" type="button">{{ 'webmakerAuthCreateAccount' | i18n }}</button>
+      </div>
     </div>
 
     <div ng-show="welcome">
