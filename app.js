@@ -351,6 +351,7 @@ if (env.get('FLAGS_EXPLORE')) {
   }));
 }
 app.get("/tools", routes.angular);
+app.get("/hack-your-school", routes.angular);
 app.get("/appmaker", routes.angular);
 app.get("/feedback", routes.angular);
 app.get("/getinvolved", routes.angular);
