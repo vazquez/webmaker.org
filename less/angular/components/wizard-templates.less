@@ -57,7 +57,7 @@
 
 .mv-popcorn-img {
   height: 14.5rem;
-  padding-bottom: 25.5px;
+  padding-bottom: 2.5rem;
 }
 
 .wizard-template {
@@ -132,18 +132,24 @@
   .wiz-align-center {
     text-align: center;
   }
+  .instructions {
+    margin-left: 0rem;
+    @media screen and (min-width: @screen-sm-min) {
+      margin-left: 3rem;
+    }
+  }
+  .rys-aside {
+    background: @brand-primary;
+  }
   .rys-xray-area {
     height: 30rem;
-    width: 34rem;
-    background: @green;
     color: @white;
     .wiz-goggles-btn {
       display: inline-block;
       background-color: #ffcd36;
       color: @black;
-      width: 31.5rem;
+      width: 100%;
       height: 7.5rem;
-      margin-left: 1.2rem;
       font-size: 2.5rem;
       font-weight: 300;
       padding: 1.8rem 0;
@@ -180,7 +186,7 @@
       width: 7rem;
       height: 7rem;
       float: left;
-      margin: 0px 15px 15px 0px;
+      margin: 0px 1.5rem 1.5rem 0px;
     }
     .highlight-rys {
       font-weight: 500;
@@ -202,7 +208,7 @@
 }
 
 .lightbeam-img {
-  height: 29rem
+  height: 29rem;
 }
 
 footer.wiz-footer {
